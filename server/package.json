@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Nohast backend: authoritative game API + WebSocket multiplayer (Render).",
-  "main": "dist/server/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc -p tsconfig.json",
-    "start": "node dist/server/src/index.js",
-    "test": "node --import tsx --test test/*.test.ts"
+    "build": "esbuild src/index.ts --bundle --platform=node --packages=external --format=cjs --outfile=dist/index.js",
+    "start": "node dist/index.js",
+    "test": "node --import tsx --test test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -16,6 +17,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "esbuild": "^0.24.0",
     "express": "^4.19.2",
     "express-rate-limit": "^7.4.0",
     "firebase-admin": "^12.5.0",
