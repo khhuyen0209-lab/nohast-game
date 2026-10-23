@@ -1,0 +1,37 @@
+# ============================================================
+# Render Blueprint — Nohast backend API + WebSocket.
+# Deploy: Render Dashboard → New → Blueprint → chọn repo này.
+# URL dự kiến: https://nohast-game.onrender.com (tên dịch vụ: nohast-game).
+# KHÔNG đặt secret trực tiếp ở đây — dùng Sync: false + đặt trong Render Dashboard.
+# ============================================================
+services:
+  - type: web
+    name: nohast-game
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: "npm install && npm run build"
+    startCommand: "npm start"
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      # Origin được phép gọi API (Firebase Hosting của project nohast-galaxy-c6c9f).
+      - key: CORS_ORIGINS
+        value: "https://nohast-galaxy-c6c9f.web.app,https://nohast-galaxy-c6c9f.firebaseapp.com,http://localhost:5173"
+      - key: FRONTEND_URL
+        value: "https://nohast-galaxy-c6c9f.web.app"
+      - key: API_URL
+        value: "https://nohast-game.onrender.com"
+      - key: FIREBASE_PROJECT_ID
+        value: "nohast-galaxy-c6c9f"
+      # Các biến BÍ MẬT — đặt trong Render Dashboard (Environment), KHÔNG điền giá trị ở đây.
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "120"

@@ -1,0 +1,95 @@
+/* Nohast UI — sci-fi theme (spec §34): blue #6FA8FF, purple #8F7CFF, dark navy bg. */
+:root {
+  --c-blue: #6FA8FF;
+  --c-purple: #8F7CFF;
+  --c-cyan: #55e0c0;
+  --c-gold: #ffcc66;
+  --c-danger: #ff6b6b;
+  --c-bg: #0a0e1f;
+  --c-bg2: #111733;
+  --c-panel: rgba(17, 23, 51, 0.85);
+  --c-border: rgba(111, 168, 255, 0.35);
+  --c-text: #e6ecff;
+  --c-dim: #8a94b8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+body {
+  background: radial-gradient(ellipse at 50% 30%, #141b3a 0%, var(--c-bg) 70%);
+  color: var(--c-text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(111,168,255,0.15), rgba(143,124,255,0.15));
+  color: var(--c-text);
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  transition: all 0.15s;
+  font-size: 13px;
+}
+button:hover:not(:disabled) { border-color: var(--c-blue); box-shadow: 0 0 12px rgba(111,168,255,0.4); transform: translateY(-1px); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button.primary { background: linear-gradient(135deg, var(--c-blue), var(--c-purple)); border: none; font-weight: 600; }
+button.danger { border-color: rgba(255,107,107,0.5); color: #ffb0b0; }
+input, select {
+  font-family: inherit;
+  background: rgba(10,14,31,0.8);
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  color: var(--c-text);
+  padding: 8px 10px;
+  font-size: 13px;
+  width: 100%;
+}
+input:focus, select:focus { outline: none; border-color: var(--c-blue); box-shadow: 0 0 8px rgba(111,168,255,0.3); }
+.panel {
+  background: var(--c-panel);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(111,168,255,0.1);
+}
+.glow-text { text-shadow: 0 0 10px rgba(111,168,255,0.6); }
+.title { font-size: 18px; font-weight: 700; letter-spacing: 1px; color: var(--c-blue); }
+.subtitle { font-size: 12px; color: var(--c-dim); text-transform: uppercase; letter-spacing: 1.5px; }
+.scroll { overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--c-border) transparent; }
+.scroll::-webkit-scrollbar { width: 6px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 3px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; border: 1px solid var(--c-border); color: var(--c-dim); }
+.tag.real { color: var(--c-cyan); border-color: rgba(85,224,192,0.4); }
+.tag.fiction { color: var(--c-purple); border-color: rgba(143,124,255,0.4); }
+.grid { display: grid; gap: 10px; }
+.flex { display: flex; gap: 8px; align-items: center; }
+.between { justify-content: space-between; }
+.mt { margin-top: 10px; } .mb { margin-bottom: 10px; }
+.stat { display: flex; flex-direction: column; gap: 2px; }
+.stat .label { font-size: 10px; color: var(--c-dim); text-transform: uppercase; letter-spacing: 1px; }
+.stat .value { font-size: 16px; font-weight: 600; color: var(--c-text); }
+.bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.bar > div { height: 100%; background: linear-gradient(90deg, var(--c-blue), var(--c-purple)); transition: width 0.3s; }
+.toast {
+  position: fixed; top: 12px; right: 12px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px; max-width: 340px;
+}
+.toast-item {
+  padding: 10px 14px; border-radius: 8px; font-size: 13px;
+  background: var(--c-panel); border: 1px solid var(--c-border);
+  animation: slideIn 0.2s ease;
+}
+.toast-item.error { border-color: rgba(255,107,107,0.6); color: #ffb0b0; }
+.toast-item.success { border-color: rgba(85,224,192,0.6); color: #a8f0dc; }
+@keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+.orient-guard {
+  position: fixed; inset: 0; z-index: 10000; background: var(--c-bg);
+  display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px; text-align: center; padding: 24px;
+}
+@media (orientation: portrait) and (max-width: 900px) {
+  .orient-guard { display: flex; }
+}
+.orient-guard .phone { width: 60px; height: 100px; border: 3px solid var(--c-blue); border-radius: 10px; animation: rotatePhone 1.5s infinite; }
+@keyframes rotatePhone { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(90deg); } }

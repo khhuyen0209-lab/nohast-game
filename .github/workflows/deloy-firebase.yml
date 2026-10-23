@@ -1,0 +1,61 @@
+# ============================================================
+# deloy-firebase.yml  (tên bắt buộc theo yêu cầu — spec §39)
+# Vị trí: .github/workflows/ để GitHub Actions tự nhận diện.
+# Tự động build client (Vite + React + TS) và deploy lên Firebase Hosting
+# khi push lên nhánh main. Build thất bại => KHÔNG deploy.
+#
+# Cần thiết lập GitHub Secrets (repo → Settings → Secrets and variables → Actions):
+#   FIREBASE_SERVICE_ACCOUNT : nội dung JSON của service account
+#       (Firebase Console → Project Settings → Service accounts → Generate new private key)
+#   FIREBASE_PROJECT_ID      : nohast-galaxy-c6c9f (hoặc project id thực tế)
+# Không lưu token/khóa bí mật trực tiếp trong file này (spec §39).
+# ============================================================
+name: Deploy Nohast client to Firebase Hosting
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'client/**'
+      - 'shared/**'
+      - 'firebase.json'
+      - '.firebaserc'
+      - 'firebase/**'
+      - '.github/workflows/deloy-firebase.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install client dependencies (lockfile)
+        working-directory: client
+        run: npm ci
+
+      - name: Build client (Vite + TypeScript)
+        working-directory: client
+        run: npm run build
+        env:
+          # API URL được inject lúc build (tùy chọn; runtime cũng có public/config.js).
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - name: Verify build output exists
+        run: test -f client/dist/index.html || (echo "::error::Build thất bại — không có client/dist/index.html" && exit 1)
+
+      - name: Deploy to Firebase Hosting (live channel)
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: live
+          # entryPoint mặc định là root (firebase.json ở root, public: client/dist)
