@@ -6,6 +6,10 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: './',
   plugins: [react()],
+  // Prefer .ts over .js so any leaked .js in shared/ never shadows real .ts sources.
+  resolve: {
+    extensions: ['.ts', '.tsx', '.mts', '.mjs', '.js', '.jsx', '.json'],
+  },
   build: {
     target: 'es2020',
     sourcemap: false,

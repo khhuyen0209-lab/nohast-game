@@ -8,6 +8,9 @@ dist/
 client/dist/
 server/dist/
 .cache/
+# Leaked JS emitted from misconfigured tsc builds (shared is TS-only, never commit .js here)
+shared/**/*.js
+shared/**/*.d.ts
 
 # Env & secrets
 .env
